@@ -3,6 +3,7 @@ package org.example.domain;
 import org.example.repository.OrderRepository;
 import org.example.repository.TradeRepository;
 
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class OrderBook {
@@ -13,12 +14,28 @@ public class OrderBook {
     private static OrderBook orderBook;
 
     private OrderBook() {
-        // asks lower price -> higher priority
-        this.asks = new PriorityQueue<>((o1, o2) -> Long.compare(o1.getPrice(), o2.getPrice()));
-        // bids higher price -> higher priority
-        this.bids = new PriorityQueue<>((o1, o2) -> Long.compare(o2.getPrice(), o1.getPrice()));
+        this.asks = new PriorityQueue<>(getAsksComparator());
+        this.bids = new PriorityQueue<>(getBidsComparator());
         this.tradeRepository = TradeRepository.getRepo();
         this.orderRepository = OrderRepository.getRepo();
+    }
+
+    private Comparator<Order> getBidsComparator() {
+        return (o1, o2) -> {
+            int r = Long.compare(o2.getPrice(), o1.getPrice()); // asks lower price -> higher priority
+            if (r == 0) {
+                return Long.compare(o1.getOrderSequenceNumber(), o2.getOrderSequenceNumber()); // if same price -> lower number, higher priority
+            } else return r;
+        };
+    }
+
+    private Comparator<Order> getAsksComparator() {
+        return (o1, o2) -> {
+            int r = Long.compare(o1.getPrice(), o2.getPrice());  // bids higher price -> higher priority
+            if (r == 0) {
+                return Long.compare(o1.getOrderSequenceNumber(), o2.getOrderSequenceNumber());  // if same price -> lower number, higher priority
+            } else return r;
+        };
     }
 
     public static OrderBook getOrderBook() {
@@ -75,8 +92,8 @@ public class OrderBook {
 
     public void reset() {
         // asks lower price -> higher priority
-        this.asks = new PriorityQueue<>((o1, o2) -> Long.compare(o1.getPrice(), o2.getPrice()));
+        this.asks = new PriorityQueue<>(getAsksComparator());
         // bids higher price -> higher priority
-        this.bids = new PriorityQueue<>((o1, o2) -> Long.compare(o2.getPrice(), o1.getPrice()));
+        this.bids = new PriorityQueue<>(getBidsComparator());
     }
 }
