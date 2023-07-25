@@ -2,8 +2,8 @@ package org.example.validator;
 
 public class OrderLineValidationException extends RuntimeException {
     private final String code;
-    public OrderLineValidationException(String code, String message, int lineNumber) {
-        super(message + " at line number " + lineNumber);
+    public OrderLineValidationException(String code, String message, String line) {
+        super(message + "in line: " + line);
         this.code = code;
     }
 

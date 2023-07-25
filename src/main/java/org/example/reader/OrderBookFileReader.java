@@ -19,7 +19,6 @@ public class OrderBookFileReader implements OrderBookReader{
             int lineNumber = 1;
             while (scanner.hasNextLine()) {
                 String orderLine = scanner.nextLine();
-                OrderValidator.validate(orderLine, lineNumber);
                 Order order = new Order(orderLine);
                 orderBook.place(order);
                 lineNumber++;

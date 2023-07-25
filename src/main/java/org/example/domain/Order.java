@@ -1,5 +1,7 @@
 package org.example.domain;
 
+import org.example.validator.OrderValidator;
+
 public class Order {
     private final long id;
     private final OrderSide side;
@@ -15,6 +17,7 @@ public class Order {
     }
 
     public Order(String orderString) {
+        OrderValidator.validate(orderString);
         String[] orderData = orderString.split(",");
         this.id = Long.parseLong(orderData[0]);
         this.side = OrderSide.valueOf(orderData[1]);
