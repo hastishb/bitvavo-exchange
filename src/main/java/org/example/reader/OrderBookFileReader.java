@@ -16,12 +16,10 @@ public class OrderBookFileReader implements OrderBookReader{
             File file = new File(System.getProperty("user.dir") + "/" + source);
             Scanner scanner = new Scanner(file);
             OrderBook orderBook = OrderBook.getOrderBook();
-            int lineNumber = 1;
             while (scanner.hasNextLine()) {
                 String orderLine = scanner.nextLine();
                 Order order = new Order(orderLine);
                 orderBook.place(order);
-                lineNumber++;
             }
             scanner.close();
         } catch (FileNotFoundException e) {
